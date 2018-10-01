@@ -1,0 +1,19 @@
+.map {
+	height: 400px;
+	width: 600px;
+}
+.map .d3-layer path {	vector-effect: non-scaling-stroke; }
+.map .d3-layer path.route {
+	stroke: black;
+	stroke-width: 3;
+}
+.map .d3-layer path.route:hover {
+	stroke: blue;
+	stroke-width: 4;
+}
+
+.map .d3-layer .polygons path {
+  stroke: black;
+  stroke-width: 1px;
+  fill: none;
+}
