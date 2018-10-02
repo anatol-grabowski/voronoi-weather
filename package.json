@@ -1,0 +1,24 @@
+{
+  "name": "voronoi-weather",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "http-server ./ -p $PORT",
+    "local": "http-server ./ -p 8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grabantot/voronoi-weather.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/grabantot/voronoi-weather/issues"
+  },
+  "homepage": "https://github.com/grabantot/voronoi-weather#readme",
+  "dependencies": {
+    "http-server": "^0.11.1"
+  }
+}

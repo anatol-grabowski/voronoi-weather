@@ -9,11 +9,11 @@ const openWeatherMapApiUrl = 'http://api.openweathermap.org/data/2.5'
 const openWeatherMapAppId = '4fc2ed41d4f0d27b2a672cb20404d4bf'
 var s
 const bbox = [-180, -90, 180, 90]
-const zoomLevel = 5
+const zoomLevel = 6
 map.once('precompose', async function() {
   s = init_ol_d3(this)
   const url = `${openWeatherMapApiUrl}/box/city?bbox=${bbox.join(',')},${zoomLevel}&appid=${openWeatherMapAppId}`
-  const resp = await fetch(url, {cache: 'force-cache'})
+  const resp = await fetch(url/*, {cache: 'force-cache'}*/)
   openWeatherMapResponse = await resp.json()
 	openWeatherMapResponse.list.forEach(weath => {
     weath.coord.lonLat = [weath.coord.Lon, weath.coord.Lat]
@@ -35,7 +35,23 @@ drawRoute = d3.line()
 function redrawPolygon(polygon) {
   polygon
     .attr("d", d => d ? "M" + d.map(lonlat => s(lonlat)).join("L") + "Z" : null)
-    .style('fill', d => d ? `rgba(255, 0, 0, ${d.data.main.temp/50})` : null);
+    .style('fill', d => {
+       if (!d) return null
+       const tempOffset = 10
+       const tempScale = 1/40
+       const temp = d.data.main.temp - tempOffset
+       const color = temp > 0 ? `rgba(255, 0, 0, ${temp*tempScale})` : `rgba(0, 0, 255, ${-temp*tempScale})`
+       console.log(color, d.data.name, d.data.main.temp)
+       return color
+    })
+    .on('click', function(d) {
+      //console.log('args', arguments)
+      //d3.select(this).style('stroke-width', '4px')
+      const hintText = `${d.data.name} ${d.data.main.temp}`
+      //alert(hintText)
+      d3.select('.info')
+        .html(hintText)
+    })
 }
 
 function redrawSite(site) {
@@ -45,6 +61,13 @@ function redrawSite(site) {
 }
 
 function draw() {
+  d3.select('body').append('div')
+    .classed('info', true)
+    .style('position', 'absolute')
+    .style('top', '1rem')
+    .style('left', '1rem')
+    .style('font-family', 'sans-serif')
+    .html('click to get temp')
   const c = ol.proj.toLonLat(map.getView().getCenter())
   const extent = map.getView().calculateExtent()
   //const e1 = ol.proj.toLonLat(extent.slice(0, 2))
@@ -58,9 +81,9 @@ function draw() {
   polygons = voronoi(openWeatherMapResponse.list).polygons()
 
   var g = d3.select('#map .d3-layer svg > g')
-  path = g.append('path')
-    .classed('route', true)
-    .attr('d', drawRoute(l))
+//  path = g.append('path')
+//    .classed('route', true)
+//    .attr('d', drawRoute(l))
   
   var polygon = g.append("g")
     .attr("class", "polygons")
