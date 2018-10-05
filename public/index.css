@@ -2,7 +2,9 @@
 	height: 100%;
 	width: 100%;
 }
-.map .d3-layer path {	vector-effect: non-scaling-stroke; }
+.map .d3-layer path {	
+	vector-effect: non-scaling-stroke; 
+}
 .map .d3-layer path.route {
 	stroke: black;
 	stroke-width: 3;
@@ -14,6 +16,6 @@
 
 .map .d3-layer .polygons path {
   stroke: black;
-  stroke-width: 0.5px;
+  stroke-width: 0.2px;
   fill: none;
 }

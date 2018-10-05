@@ -48,3 +48,5 @@ function init_ol_d3(map) {
 	}
 	return scaleLonLat
 }
+
+module.exports = init_ol_d3

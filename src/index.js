@@ -1,6 +1,10 @@
+﻿
+console.log(process.env)
+const init_ol_d3 = require('./init_ol_d3')
+
 var osm_layer	= new ol.layer.Tile({ source: new ol.source.OSM() })
 //var map_view	= new ol.View({ center: ol.proj.fromLonLat([27.34, 53.74]), zoom: 6 })
-var map_view	= new ol.View({ center: ol.proj.fromLonLat([0, 0]), zoom: 0 })
+var map_view	= new ol.View({ center: ol.proj.fromLonLat([0, 0]), zoom: 3 })
 var map	        = new ol.Map({ target: 'map' })
 map.setView(map_view)
 map.addLayer(osm_layer)
@@ -25,7 +29,6 @@ var vector = new ol.layer.Image({
 });
 map.addLayer(vector)
 
-
 const openWeatherMapApiUrl = 'http://api.openweathermap.org/data/2.5'
 const openWeatherMapAppId = '4fc2ed41d4f0d27b2a672cb20404d4bf'
 var s
@@ -34,7 +37,8 @@ const zoomLevel = +window.location.hash.substr(1) || 6
 map.once('precompose', async function() {
   s = init_ol_d3(this)
   const url = `${openWeatherMapApiUrl}/box/city?bbox=${bbox.join(',')},${zoomLevel}&appid=${openWeatherMapAppId}`
-  const resp = await fetch(url, window.location.protocol === 'file:' ? {cache: 'force-cache'} : undefined)
+  const forceCache = window.location.protocol === 'file:' || window.location.hostname === 'localhost'
+  const resp = await fetch(url, forceCache ? {cache: 'force-cache'} : undefined)
   openWeatherMapResponse = await resp.json()
 	openWeatherMapResponse.list.forEach(weath => {
     weath.coord.lonLat = [weath.coord.Lon, weath.coord.Lat]
